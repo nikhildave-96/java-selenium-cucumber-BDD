@@ -1,0 +1,17 @@
+.classpath
+.gitattributes
+.gradle/
+.project
+.settings/
+
+# folders ignored:
+build/
+test-output/
+bin/
+screenshots/
+applogs/
+
+# not ignoring below as they are necessary for using/executing gradlew related commands
+#gradle/
+#gradlew
+#gradlew.bat
