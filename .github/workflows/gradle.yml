@@ -25,22 +25,24 @@ env:
   oc_password: ${{ secrets.OC_PASSWORD }}
 
 jobs:
-  gradle_test:
+  # Job 1 - Gradle build and test
+  Gradle_test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
+    - name: Step 1 - Checkout the project
+      uses: actions/checkout@v4
+    - name: Step 2 - Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
     # - name: Setup Gradle on runner if in case project doesn't have gradle wrapper.
     #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-    - name: Grant execute permission for gradlew
+    - name: Step 3 - Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Running tests manually
+    - name: Step 4 - Running tests manually
       if: github.event_name == 'workflow_dispatch'
       # initializing environment variables using user inputs.
       env:
@@ -50,9 +52,9 @@ jobs:
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
         ./gradlew clean build
-        # ./gradlew cucumberTag -P tags=@Positive
+        # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
         
-    - name: Running tests as auto-trigger
+    - name: Step 4 - Running tests as auto-trigger
       if: github.event_name == 'push' ||  github.event_name == 'pull_request'
       # initializing environment variables as Variables configured in the repository.
       env:
@@ -63,3 +65,50 @@ jobs:
         echo "url is: " echo ${{ env.oc_url }}
         ./gradlew clean build
         # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+
+    - name: Step 5 - Upload test report and log files
+      uses: actions/upload-artifact@v4
+      with:
+        name: upload-test-run-artifacts
+        path: |
+          test-output/extent_spark
+          test-output/cucumber-reports/*.html
+          applogs/app.log
+
+  # Job 2 - Sending artifacts over email
+  Send-email:
+    # runner type can vary for different jobs
+    runs-on: macos-latest
+    needs: Gradle_test
+    # success() || failure() can be used instead of always() as per the requirement
+    if: always()
+    steps:
+      - name: Step 1 - Download the artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # name here should match the name provided in actions/upload-artifact
+          name: upload-test-run-artifacts
+          # path specified below gets created under the project's root folder
+          path: test-artifacts
+      - name: Step 2 - Send mail with attached artifacts
+        uses: dawidd6/action-send-mail@v4
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          # password here is the app password that allows less secure apps to access the google account.
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          subject: "Opencart BDD gradle workflow results: ${{ github.repository }}"
+          from: Automated-Test-Results-Email
+          # use comma separation to add multiple recipients 
+          to: nikhildave75@gmail.com
+          body: |
+            Hi,
+            
+            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed.
+            
+            Kindly find the test artifacts attached to this email.
+            
+            Thanks & Regards!
+          # complete path of the artifact should be specified, use comma separator in case of multiple artifacts
+          attachments: ./test-artifacts/test-output/extent_spark, ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html
