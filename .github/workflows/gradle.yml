@@ -35,17 +35,20 @@ jobs:
       run: chmod +x gradlew
 
     - name: Run tests manually
-      if: github.event_name=='workflow_dispatch'
+      if: github.event_name == 'workflow_dispatch'
       env:
         oc_username: ${{ secrets.OC_USERNAME }}
         oc_password: ${{ secrets.OC_PASSWORD }}
         oc_browser: ${{ github.event.inputs.browser }}
         oc_url: ${{ github.event.inputs.app_url }}
       run: |
+        echo "browser is: " ${{ env.oc_browser }}
+        echo "url is: " ${{ env.oc_url }}
         ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
         
     - name: Run tests as auto-trigger
+      if: github.event_name == 'push' ||  github.event_name == 'pull_request'
       env:
         oc_username: ${{ secrets.OC_USERNAME }}
         oc_password: ${{ secrets.OC_PASSWORD }}
