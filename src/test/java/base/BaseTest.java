@@ -75,6 +75,7 @@ public class BaseTest {
 	}
 
 	public static byte[] captureScreenshotOnFailReport() throws IOException {
+		logger.severe("attaching screenshot in report ...");
 		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
 	}
 

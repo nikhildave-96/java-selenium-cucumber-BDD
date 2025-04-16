@@ -33,7 +33,6 @@ public class Hooks {
 		if (scenario.isFailed()) {
 			BaseTest.captureScreenshotOnFail(scenario.getName());
 			scenario.attach(BaseTest.captureScreenshotOnFailReport(), "image/png", scenario.getName());
-			logger.severe("attached screenshot in report ...");
 		}
 		BaseTest.closeBrowser();
 		logger.info("========================= ending test case execution '" + scenario.getName() + "' ...");

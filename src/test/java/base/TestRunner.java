@@ -16,13 +16,13 @@ import io.cucumber.testng.CucumberOptions;
 // glue option takes the package name(s) [as it looks for actual compiled classes] and not the file-system-path inside which step definitions are written (automatically searches the nested packages), 
 // can also take a comma-separated list of different package names inside which step definitions are written.
 
-//failed scenarios gets written to failedTests.txt by rerun plugin which will be further retried by FailedTestRunner.
+//failed scenarios gets written to failedTests.txt by rerun plugin which can be further retried by FailedTestRunner.
 
 @CucumberOptions(plugin = { "pretty", "html:test-output/cucumber-reports/report.html",
 		"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
 		"rerun:test-output/failedTests.txt" }, features = {
-				"src/test/resources/features" }, glue = { "stepDefinitions" }, tags = "@oc_device_Windows11x64")
-
+				"src/test/resources/features" }, glue = { "stepDefinitions" })
+// tags = "@oc_author_NikhilDave"
 // TestNG based cucumber runner
 public class TestRunner extends AbstractTestNGCucumberTests {
 

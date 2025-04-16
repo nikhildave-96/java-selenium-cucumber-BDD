@@ -1,0 +1,10 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<suite name="JavaBDDAutomatedTests">
+	<test name="JavaBDDTests">
+		<classes>
+			<class name="base.TestRunner"/> <!-- should be able to navigate to the class upon CTRL + click -->
+			<class name="base.FailedTestRunner" />
+		</classes>
+	</test>
+</suite>
