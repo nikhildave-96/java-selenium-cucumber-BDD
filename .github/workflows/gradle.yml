@@ -43,12 +43,12 @@ jobs:
     - name: Trigger manual run
       if: github.event_name=='workflow_dispatch'
       run: |
-        oc_browser = ${{ github.event.inputs.browser }}
-        oc_url = ${{ github.event.inputs.app_url }}
+        env.oc_browser = ${{ github.event.inputs.browser }}
+        env.oc_url = ${{ github.event.inputs.app_url }}
         
     - name: Run tests using Gradle Wrapper
       run: |
-        echo "browser is: $oc_browser"
-        echo "url is: $oc_url"
+        echo "browser is: $env.oc_browser"
+        echo "url is: $env.oc_url"
         ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
