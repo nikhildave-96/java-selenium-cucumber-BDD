@@ -18,6 +18,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  oc_username: ${{ secrets.OC_USERNAME }}
+  oc_password: ${{ secrets.OC_PASSWORD }}
+
 jobs:
   gradle_test:
     runs-on: ubuntu-latest
@@ -37,15 +41,16 @@ jobs:
     - name: Run tests manually
       if: github.event_name == 'workflow_dispatch'
       env:
-        oc_username: ${{ secrets.OC_USERNAME }}
-        oc_password: ${{ secrets.OC_PASSWORD }}
+        # oc_username: ${{ secrets.OC_USERNAME }}
+        # oc_password: ${{ secrets.OC_PASSWORD }}
         oc_browser: ${{ github.event.inputs.browser }}
         oc_url: ${{ github.event.inputs.app_url }}
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
+        echo "user is: " ${{ env.oc_username }}
         ./gradlew clean build
-        ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        ./gradlew cucumberTag -P tags=@Positive
         
     - name: Run tests as auto-trigger
       if: github.event_name == 'push' ||  github.event_name == 'pull_request'
@@ -55,9 +60,7 @@ jobs:
         oc_browser: ${{ vars.OC_BROWSER }}
         oc_url: ${{ vars.OC_URL }}
       run: |
-        echo "browser is: "
-        echo ${{ env.oc_browser }}
-        echo "url is: "
-        echo ${{ env.oc_url }}
+        echo "browser is: " ${{ env.oc_browser }}
+        echo "url is: " echo ${{ env.oc_url }}
         ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
