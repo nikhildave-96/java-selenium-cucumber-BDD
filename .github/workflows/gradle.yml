@@ -67,6 +67,9 @@ jobs:
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
 
     - name: Step 5 - Upload test report and log files
+      id: artifactUpload
+      # to be changed to failure() to skip sending artifacts over email in success case.
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
@@ -77,6 +80,8 @@ jobs:
 
   # Job 2 - Sending artifacts over email
   Send-email:
+    # sending email only when artifacts are uploaded (indirectly on test failure).
+    # if: steps.artifactUpload.outcome != 'success'
     # runner type can vary for different jobs
     runs-on: macos-latest
     needs: Gradle_test
