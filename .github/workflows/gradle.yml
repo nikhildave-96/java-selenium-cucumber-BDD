@@ -3,6 +3,16 @@
 name: Java CI with Gradle
 
 on:
+  workflow_dispatch:
+    inputs:
+      browser:
+        description: "Browser to use for test automation"
+        required: true
+        default: "chrome"
+      app_url:
+        description: "URL of application under test"
+        required: true
+        default: "https://tutorialsninja.com/demo/"
   push:
     branches: [ "main" ]
   pull_request:
