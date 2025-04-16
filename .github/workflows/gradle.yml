@@ -52,7 +52,7 @@ jobs:
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
         ./gradlew clean build
-        # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
         
     - name: Step 4 - Running tests as auto-trigger
       if: github.event_name == 'push' ||  github.event_name == 'pull_request'
@@ -64,7 +64,7 @@ jobs:
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " echo ${{ env.oc_url }}
         ./gradlew clean build
-        # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
 
     - name: Step 5 - Upload test report and log files
       uses: actions/upload-artifact@v4
