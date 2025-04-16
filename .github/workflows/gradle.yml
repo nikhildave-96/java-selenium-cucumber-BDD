@@ -36,4 +36,11 @@ jobs:
     - name: Test with Gradle Wrapper
       run: |
         ./gradlew clean build
-        # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+    - name: Viewing some paths
+      run: |
+        pwd
+        cd test-output
+        ls
+        cd ../applogs
+        pwd
