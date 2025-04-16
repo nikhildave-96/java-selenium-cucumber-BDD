@@ -25,7 +25,7 @@ public class LoginPage {
 	@FindBy(xpath = "//*[@value='Login']")
 	public WebElement loginBtn;
 
-	@FindBy(xpath = "//*[text()='New Customer']")
+	@FindBy(xpath = "//*[text()='New Customer1']")
 	public WebElement newCustomerTxt;
 
 	@FindBy(xpath = "//*[text()='Warning: No match for E-Mail Address and/or Password.']")
