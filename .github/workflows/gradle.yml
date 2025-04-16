@@ -116,4 +116,5 @@ jobs:
             
             Thanks & Regards!
           # complete path of the artifact should be specified, use comma separator in case of multiple artifacts
-          attachments: ./test-artifacts/test-output/extent_spark, ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html
+          attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html
+          # ./test-artifacts/test-output/extent_spark
