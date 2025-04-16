@@ -4,6 +4,7 @@ name: Java CI with Gradle
 
 on:
   workflow_dispatch:
+    # taking user inputs similar to Jenkin's 'Build with Parameters'.
     inputs:
       browser:
         description: "Browser to use for test automation (chrome/firefox/edge):"
@@ -18,6 +19,7 @@ on:
   pull_request:
     branches: [ "main" ]
 
+# initializing environment variables as Secrets configured in the repository.
 env:
   oc_username: ${{ secrets.OC_USERNAME }}
   oc_password: ${{ secrets.OC_PASSWORD }}
@@ -33,34 +35,31 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    # - name: Setup Gradle if in case project doesn't contain gradle wrapper.
+    # - name: Setup Gradle on runner if in case project doesn't have gradle wrapper.
     #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Run tests manually
+    - name: Running tests manually
       if: github.event_name == 'workflow_dispatch'
+      # initializing environment variables using user inputs.
       env:
-        # oc_username: ${{ secrets.OC_USERNAME }}
-        # oc_password: ${{ secrets.OC_PASSWORD }}
         oc_browser: ${{ github.event.inputs.browser }}
         oc_url: ${{ github.event.inputs.app_url }}
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
-        echo "user is: " ${{ env.oc_username }}
         ./gradlew clean build
-        ./gradlew cucumberTag -P tags=@Positive
+        # ./gradlew cucumberTag -P tags=@Positive
         
-    - name: Run tests as auto-trigger
+    - name: Running tests as auto-trigger
       if: github.event_name == 'push' ||  github.event_name == 'pull_request'
+      # initializing environment variables as Variables configured in the repository.
       env:
-        oc_username: ${{ secrets.OC_USERNAME }}
-        oc_password: ${{ secrets.OC_PASSWORD }}
         oc_browser: ${{ vars.OC_BROWSER }}
         oc_url: ${{ vars.OC_URL }}
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " echo ${{ env.oc_url }}
         ./gradlew clean build
-        ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        # ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
