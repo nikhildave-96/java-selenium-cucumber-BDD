@@ -85,7 +85,7 @@ jobs:
       # send artifacts over email only in failure cases
       # if: always() && (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
       # this works fine as well -> 
-      if: always() && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
+      if: ${{ always() }} && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
