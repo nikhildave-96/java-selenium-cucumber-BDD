@@ -73,17 +73,16 @@ jobs:
     - name: PRINT 'run_tests_* 'INFO
       if: always()
       run: |
-        echo "run_tests_m outcome is: " ${{ steps.run_tests_m.outcome }}
+        echo run_tests_m outcome is: ${{ steps.run_tests_m.outcome }}
         echo "run_tests_m conclusion is: " ${{ steps.run_tests_m.conclusion }}
-        echo "run_tests_a outcome is: " ${{ steps.run_tests_a.outcome }}
+        echo run_tests_a outcome is: ${{ steps.run_tests_a.outcome }}
         echo "run_tests_a conclusion is: " ${{ steps.run_tests_a.conclusion }}
         echo evaluation is: ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
     
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
-      # send artifacts over email only in failure cases.
-      # if: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure') && true
-      if: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
+      # send artifacts over email only in failure cases
+      if: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure') && true
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
@@ -109,6 +108,7 @@ jobs:
           # path specified below gets created under the project's root folder
           path: test-artifacts
       - name: Step 2 - Send mail with attached artifacts
+        # if an above step fails, the immediate following step is automatically skipped given no if condition exists for that following step that will somehow manage to execute it.
         uses: dawidd6/action-send-mail@v4
         with:
           server_address: smtp.gmail.com
