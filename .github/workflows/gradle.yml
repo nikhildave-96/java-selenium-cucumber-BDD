@@ -43,9 +43,6 @@ jobs:
       id: xgradlew
       run: |
         chmod +x gradlew
-        echo "status is: " ${{ steps.xgradlew.outputs.status }}
-        echo "outcome is: " ${{ steps.xgradlew.outcome }}
-        echo "conclusion is: " ${{ steps.xgradlew.conclusion }}
 
     - name: Step 4 - Running tests manually
       id: run_tests_m
@@ -57,11 +54,11 @@ jobs:
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
+        echo "status is: " ${{ steps.xgradlew.outputs.status }}
+        echo "outcome is: " ${{ steps.xgradlew.outcome }}
+        echo "conclusion is: " ${{ steps.xgradlew.conclusion }}
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
-        echo "status is: " ${{ steps.run_tests_m.outputs.status }}
-        echo "outcome is: " ${{ steps.run_tests_m.outcome }}
-        echo "conclusion is: " ${{ steps.run_tests_m.conclusion }}
         
     - name: Step 4 - Running tests as auto-trigger
       id: run_tests_a
@@ -75,10 +72,13 @@ jobs:
         echo "url is: " echo ${{ env.oc_url }}
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
-        echo "status is: " ${{ steps.run_tests_a.outputs.status }}
-        echo "outcome is: " ${{ steps.run_tests_a.outcome }}
-        echo "conclusion is: " ${{ steps.run_tests_a.conclusion }}
 
+    - name: PRINT INFO
+      run: |
+        echo "status is: " ${{ steps.run_tests_m.outputs.status }}
+        echo "outcome is: " ${{ steps.run_tests_m.outcome }}
+        echo "conclusion is: " ${{ steps.run_tests_m.conclusion }}
+    
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
       # to be changed to failure() to skip sending artifacts over email in success cases.
@@ -91,6 +91,7 @@ jobs:
           test-output/cucumber-reports/*.html
           applogs/app.log
           screenshots/onFail/*.png
+
 
   # Job 2 - Sending artifacts over email
   Send-email-fail:
@@ -127,6 +128,7 @@ jobs:
           attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
           # needs additional handling wrt zipping as directory cannot be uploaded.
           # ./test-artifacts/test-output/extent_spark
+
           
   # Job 3 - Sending pass info over email
   Send-email-pass:
