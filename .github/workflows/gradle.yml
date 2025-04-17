@@ -54,8 +54,6 @@ jobs:
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
-        echo "outcome is: " ${{ steps.xgradlew.outcome }}
-        echo "conclusion is: " ${{ steps.xgradlew.conclusion }}
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
         
@@ -72,11 +70,13 @@ jobs:
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
 
-    - name: PRINT INFO
+    - name: PRINT 'run_tests_* 'INFO
       if: always()
       run: |
-        echo "outcome is: " ${{ steps.run_tests_m.outcome }}
-        echo "conclusion is: " ${{ steps.run_tests_m.conclusion }}
+        echo "run_tests_m outcome is: " ${{ steps.run_tests_m.outcome }}
+        echo "run_tests_m conclusion is: " ${{ steps.run_tests_m.conclusion }}
+        echo "run_tests_a outcome is: " ${{ steps.run_tests_a.outcome }}
+        echo "run_tests_a conclusion is: " ${{ steps.run_tests_a.conclusion }}
     
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
@@ -119,7 +119,9 @@ jobs:
           body: |
             Hi,
             
-            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed.
+            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed with errors.
+            
+            Click this link for more details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
             Kindly find the test artifacts attached to this email.
             
@@ -148,6 +150,8 @@ jobs:
           body: |
             Hi,
             
-            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed successfully.
+            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed successfully. 
+            
+            Click this link for more details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
             Thanks & Regards!
