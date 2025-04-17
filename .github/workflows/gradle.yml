@@ -80,18 +80,15 @@ jobs:
         echo run_tests_a outcome is: ${{ steps.run_tests_a.outcome }}
         echo "run_tests_a conclusion is: " ${{ steps.run_tests_a.conclusion }}
         echo evaluation1 is: ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
-        # echo evaluation2 is: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
-        # echo evaluation3 is: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure') && true
-        # echo evaluation4 is: steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' && true
         echo evaluation5 is: true && (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
-        echo evaluation7 is: true && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
+        
     
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
       # send artifacts over email only in failure cases
       # if: true && (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
       # if: true && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
-      if: true
+      if: true()
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
