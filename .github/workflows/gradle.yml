@@ -59,6 +59,9 @@ jobs:
         echo "url is: " ${{ env.oc_url }}
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        echo "status is: " ${{ steps.run_tests_m.outputs.status }}
+        echo "outcome is: " ${{ steps.run_tests_m.outcome }}
+        echo "conclusion is: " ${{ steps.run_tests_m.conclusion }}
         
     - name: Step 4 - Running tests as auto-trigger
       id: run_tests_a
@@ -72,6 +75,9 @@ jobs:
         echo "url is: " echo ${{ env.oc_url }}
         # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
+        echo "status is: " ${{ steps.run_tests_a.outputs.status }}
+        echo "outcome is: " ${{ steps.run_tests_a.outcome }}
+        echo "conclusion is: " ${{ steps.run_tests_a.conclusion }}
 
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
