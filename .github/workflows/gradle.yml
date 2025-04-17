@@ -87,8 +87,8 @@ jobs:
       id: artifactUpload
       # send artifacts over email only in failure cases
       # if: true && (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure')
-      # if: true && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
-      if: always()
+      if: true && ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
+      # if: always()
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
@@ -129,30 +129,31 @@ jobs:
           pwd
           ls
         
-      # - name: Step 2 - Send mail with attached artifacts
-      #   # if an above step fails, the immediate following step is automatically skipped given no if condition exists for that following step that will somehow manage to execute it.
-      #   uses: dawidd6/action-send-mail@v4
-      #   with:
-      #     server_address: smtp.gmail.com
-      #     server_port: 465
-      #     password: ${{ secrets.EMAIL_PASSWORD }}
-      #     username: ${{ secrets.EMAIL_USERNAME }}
-      #     subject: "Opencart BDD gradle workflow results: ${{ github.repository }}"
-      #     from: Automated-Test-Results-Email
-      #     to: nikhildave75@gmail.com
-      #     body: |
-      #       Hi,
+      - name: Step 2 - Send mail with attached artifacts
+        # if an above step fails, the immediate following step is automatically skipped given no if condition exists for that following step that will somehow manage to execute it.
+        uses: dawidd6/action-send-mail@v4
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          subject: "Opencart BDD gradle workflow results: ${{ github.repository }}"
+          from: Automated-Test-Results-Email
+          to: nikhildave75@gmail.com
+          body: |
+            Hi,
             
-      #       Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed with errors.
+            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed with errors.
             
-      #       Click this link for more details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Click this link for more details: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
             
-      #       Kindly find the test artifacts attached to this email.
+            Kindly find the test artifacts attached to this email.
             
-      #       Thanks & Regards!
-      #     attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
-      #     # needs additional handling wrt zipping as directory cannot be uploaded.
-      #     # ./test-artifacts/test-output/extent_spark
+            Thanks & Regards!
+          # attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
+          # needs additional handling wrt zipping as directory cannot be uploaded.
+          # ./test-artifacts/test-output/extent_spark
+          attachments: release.zip
 
           
   # Job 3 - Sending pass info over email
