@@ -97,7 +97,7 @@ jobs:
     runs-on: macos-latest
     needs: Gradle_test
     # indicating 'run_tests_*' step failure implying 'Gradle_test' job failure.
-    if: needs.Gradle_test.result == 'failure'
+    if: ${{needs.Gradle_test.result == 'failure' &&  always() }}
     steps:
       - name: Step 1 - Download the artifacts
         uses: actions/download-artifact@v4
@@ -133,7 +133,7 @@ jobs:
   Send-email-pass:
     runs-on: macos-latest
     needs: Gradle_test
-    if: needs.Gradle_test.result == 'success'
+    if: ${{needs.Gradle_test.result == 'success' &&  always() }}
     steps:
       - name: Step 1 - Send mail
         uses: dawidd6/action-send-mail@v4
