@@ -40,9 +40,15 @@ jobs:
     # - name: Setup Gradle on runner if in case project doesn't have gradle wrapper.
     #   uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
     - name: Step 3 - Grant execute permission for gradlew
-      run: chmod +x gradlew
+      id: xgradlew
+      run: |
+        chmod +x gradlew
+        echo "status is: " ${{ steps.xgradlew.outputs.status }}
+        echo "outcome is: " ${{ steps.xgradlew.outcome }}
+        echo "conclusion is: " ${{ steps.xgradlew.conclusion }}
 
     - name: Step 4 - Running tests manually
+      id: run_tests_m
       if: github.event_name == 'workflow_dispatch'
       # initializing environment variables using user inputs.
       env:
@@ -51,10 +57,11 @@ jobs:
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
-        ./gradlew clean build
+        # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
         
     - name: Step 4 - Running tests as auto-trigger
+      id: run_tests_a
       if: github.event_name == 'push' ||  github.event_name == 'pull_request'
       # initializing environment variables as Variables configured in the repository.
       env:
@@ -63,13 +70,13 @@ jobs:
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " echo ${{ env.oc_url }}
-        ./gradlew clean build
+        # ./gradlew clean build
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
 
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
       # to be changed to failure() to skip sending artifacts over email in success cases.
-      if: always()
+      if: ${{ steps.run_tests_m.outcome == 'failure' }} || ${{ steps.run_tests_a.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
@@ -80,14 +87,11 @@ jobs:
           screenshots/onFail/*.png
 
   # Job 2 - Sending artifacts over email
-  Send-email:
-    # sending email only when artifacts are uploaded (i.e., only on test failures).
-    # if: steps.artifactUpload.outcome != 'success'
-    # runner type can vary for different jobs
+  Send-email-fail:
     runs-on: macos-latest
     needs: Gradle_test
-    # success() || failure() can be used instead of always() as per the requirement
-    if: always()
+    # indicating 'run_tests_*' step failure implying 'Gradle_test' job failure.
+    if: needs.Gradle_test.result == 'failure'
     steps:
       - name: Step 1 - Download the artifacts
         uses: actions/download-artifact@v4
@@ -101,12 +105,10 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 465
-          # password here is the app password that allows less secure apps to access the google account.
           password: ${{ secrets.EMAIL_PASSWORD }}
           username: ${{ secrets.EMAIL_USERNAME }}
           subject: "Opencart BDD gradle workflow results: ${{ github.repository }}"
           from: Automated-Test-Results-Email
-          # use comma separation to add multiple recipients 
           to: nikhildave75@gmail.com
           body: |
             Hi,
@@ -116,7 +118,29 @@ jobs:
             Kindly find the test artifacts attached to this email.
             
             Thanks & Regards!
-          # complete path of the artifact should be specified, use comma separator in case of multiple artifacts
           attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
           # needs additional handling wrt zipping as directory cannot be uploaded.
           # ./test-artifacts/test-output/extent_spark
+          
+  # Job 3 - Sending pass info over email
+  Send-email-pass:
+    runs-on: macos-latest
+    needs: Gradle_test
+    if: needs.Gradle_test.result == 'success'
+    steps:
+      - name: Step 1 - Send mail
+        uses: dawidd6/action-send-mail@v4
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          username: ${{ secrets.EMAIL_USERNAME }}
+          subject: "Opencart BDD gradle workflow results: ${{ github.repository }}"
+          from: Automated-Test-Results-Email
+          to: nikhildave75@gmail.com
+          body: |
+            Hi,
+            
+            Gradle build workflow for GitHub Repository: '${{ github.repository }}' has completed successfully.
+            
+            Thanks & Regards!
