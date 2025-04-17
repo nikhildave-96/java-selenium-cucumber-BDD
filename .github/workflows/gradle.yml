@@ -54,7 +54,6 @@ jobs:
       run: |
         echo "browser is: " ${{ env.oc_browser }}
         echo "url is: " ${{ env.oc_url }}
-        echo "status is: " ${{ steps.xgradlew.outputs.status }}
         echo "outcome is: " ${{ steps.xgradlew.outcome }}
         echo "conclusion is: " ${{ steps.xgradlew.conclusion }}
         # ./gradlew clean build
@@ -74,8 +73,8 @@ jobs:
         ./gradlew cucumberTag -P tags=@oc_author_NikhilDave
 
     - name: PRINT INFO
+      if: always()
       run: |
-        echo "status is: " ${{ steps.run_tests_m.outputs.status }}
         echo "outcome is: " ${{ steps.run_tests_m.outcome }}
         echo "conclusion is: " ${{ steps.run_tests_m.conclusion }}
     
