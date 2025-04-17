@@ -77,12 +77,13 @@ jobs:
         echo "run_tests_m conclusion is: " ${{ steps.run_tests_m.conclusion }}
         echo "run_tests_a outcome is: " ${{ steps.run_tests_a.outcome }}
         echo "run_tests_a conclusion is: " ${{ steps.run_tests_a.conclusion }}
+        echo "evaluation is: " if ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }}
     
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
       # to be changed to failure() to skip sending artifacts over email in success cases.
       # if: ${{ steps.run_tests_m.outcome == 'failure' && always() }} || ${{ steps.run_tests_a.outcome == 'failure' && always() }}
-      if: ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }} && ${{ always() }}
+      if: (steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure') && true
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
