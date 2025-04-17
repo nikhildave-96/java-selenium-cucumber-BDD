@@ -81,7 +81,8 @@ jobs:
     - name: Step 5 - Upload test report and log files
       id: artifactUpload
       # to be changed to failure() to skip sending artifacts over email in success cases.
-      if: ${{ steps.run_tests_m.outcome == 'failure' && always() }} || ${{ steps.run_tests_a.outcome == 'failure' && always() }}
+      # if: ${{ steps.run_tests_m.outcome == 'failure' && always() }} || ${{ steps.run_tests_a.outcome == 'failure' && always() }}
+      if: ${{ steps.run_tests_m.outcome == 'failure' || steps.run_tests_a.outcome == 'failure' }} && ${{ always() }}
       uses: actions/upload-artifact@v4
       with:
         name: upload-test-run-artifacts
@@ -97,7 +98,7 @@ jobs:
     runs-on: macos-latest
     needs: Gradle_test
     # indicating 'run_tests_*' step failure implying 'Gradle_test' job failure.
-    if: ${{needs.Gradle_test.result == 'failure' &&  always() }}
+    if: ${{ needs.Gradle_test.result == 'failure' &&  always() }}
     steps:
       - name: Step 1 - Download the artifacts
         uses: actions/download-artifact@v4
@@ -135,7 +136,7 @@ jobs:
   Send-email-pass:
     runs-on: macos-latest
     needs: Gradle_test
-    if: ${{needs.Gradle_test.result == 'success' &&  always() }}
+    if: ${{ needs.Gradle_test.result == 'success' &&  always() }}
     steps:
       - name: Step 1 - Send mail
         uses: dawidd6/action-send-mail@v4
