@@ -113,28 +113,13 @@ jobs:
           # path specified below gets created under the project's root folder
           path: test-artifacts
 
-          # works but gmail smtp simply doesn't allow attaching .zip as attachment in email
+          # works but gmail smtp simply doesn't allow attaching .7z/.zip as attachment in email
       # - name: Step 2(O) - zip artifacts to be attached in email
       #   uses: thedoctor0/zip-release@0.7.5
       #   with:
       #     type: 'zip'
       #     filename: 'release.zip'
       #     path: ./test-artifacts
-
-      - run: |
-          pwd
-          ls
-          
-      - name: Step 2(O) - zip artifacts to be attached in email
-        uses: thedoctor0/zip-release@0.7.5
-        with:
-          type: '7z'
-          filename: 'release.7z'
-          path: ./test-artifacts
-
-      - run: |
-          pwd
-          ls
       
       - name: Step 2 - Send mail with attached artifacts
         # if an above step fails, the immediate following step is automatically skipped given no if condition exists for that following step that will somehow manage to execute it.
@@ -157,10 +142,10 @@ jobs:
             Kindly find the test artifacts attached to this email.
             
             Thanks & Regards!
-          # attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
+          attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
           # needs additional handling wrt zipping as directory cannot be uploaded.
           # ./test-artifacts/test-output/extent_spark
-          attachments: release.7z
+          # attachments: release.7z
 
           
   # Job 3 - Sending pass info over email
