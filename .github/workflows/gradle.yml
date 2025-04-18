@@ -121,6 +121,21 @@ jobs:
       #     filename: 'release.zip'
       #     path: ./test-artifacts
 
+      - run: |
+          pwd
+          ls
+          
+      - name: Step 2(O) - zip artifacts to be attached in email
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          type: '7z'
+          filename: 'release.7z'
+          path: ./test-artifacts
+
+      - run: |
+          pwd
+          ls
+      
       - name: Step 2 - Send mail with attached artifacts
         # if an above step fails, the immediate following step is automatically skipped given no if condition exists for that following step that will somehow manage to execute it.
         uses: dawidd6/action-send-mail@v4
