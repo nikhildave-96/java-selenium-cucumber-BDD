@@ -157,10 +157,10 @@ jobs:
             Kindly find the test artifacts attached to this email.
             
             Thanks & Regards!
-          attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
+          # attachments: ./test-artifacts/applogs/*.log, ./test-artifacts/test-output/cucumber-reports/*.html, ./test-artifacts/screenshots/onFail/*.png
           # needs additional handling wrt zipping as directory cannot be uploaded.
           # ./test-artifacts/test-output/extent_spark
-          # attachments: release.zip
+          attachments: release.7z
 
           
   # Job 3 - Sending pass info over email
