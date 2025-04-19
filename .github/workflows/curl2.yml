@@ -9,15 +9,22 @@ jobs:
   
     steps:
     - run: |
+        pwd
+        ls
         # getting job logs
         curl -L \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
           # -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/jobs/JOB_ID/logs
+        pwd
+        ls
         # getting workflow logs
         curl -L \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
           https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/runs/RUN_ID/logs
+        pwd
+        ls
         
+  
