@@ -1,0 +1,14 @@
+name: test curl
+
+on:
+  workflow_dispatch:
+
+jobs:
+  curl_test:
+    runs-on: ubuntu-latest
+  
+    steps:
+    - run: |
+        pwd
+        ls 
+        
