@@ -179,8 +179,7 @@ jobs:
   download_logs:
     runs-on: macos-latest
     needs: [Gradle_test, Send_email_fail, Send_email_pass]
-    if: |
-      always()
+    if: always()
       # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped') && 
       # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped')
       
