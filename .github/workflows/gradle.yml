@@ -183,6 +183,7 @@ jobs:
   #   steps: 
   #     - run: |
   #         curl -X GET "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.zip
+  #         curl -X GET "https://api.github.com/repos/${{github.repository}}/actions/jobs/40783882806/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.txt
   #         mkdir test456_ext
   #         # sudo apt-get install unzip
   #         # sudo apt install unzip
