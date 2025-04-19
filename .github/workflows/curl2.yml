@@ -19,7 +19,14 @@ jobs:
         # ${{ secrets.MY_TOKEN }}
         # ${{ github.event.inputs.job_id }}
         # ${{ github.event.inputs.wf_id }}
-        curl -X GET "https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/jobs/40783882806/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.txt
+        # curl -X GET "https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/jobs/40783882806/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.txt
+        curl -X GET "https://api.github.com/repos/${{github.repository}}/actions/jobs/40783882806/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.txt
         pwd
         ls
+        
+    - uses: actions/upload-artifact@v4
+      with:
+        name: upload-job-log
+        path: |
+          test456.txt
         
