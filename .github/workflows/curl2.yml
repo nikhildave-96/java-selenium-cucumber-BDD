@@ -2,11 +2,11 @@ name: test curl 2
 
 on:
   workflow_dispatch:
-    inputs:
-        job_id:
-          required: true
-        wf_id:
-          required: true
+    # inputs:
+    #     job_id:
+    #       required: true
+    #     wf_id:
+    #       required: true
 
 jobs:
   curl_test2:
@@ -15,23 +15,11 @@ jobs:
     steps:
     - run: |
         pwd
-        ls
-        # getting job logs
-        curl -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
-          # -H "X-GitHub-Api-Version: 2022-11-28" \
-          "https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/jobs/${{ github.event.inputs.job_id }}/logs" \
-          -o job_logs.zip
-        pwd
-        ls
-        # getting workflow logs
-        curl -L \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.MY_TOKEN }}" \
-          "https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/runs/${{ github.event.inputs.wf_id }}/logs" \
-          -o wf_logs.zip
+        ls 
+        # ${{ secrets.MY_TOKEN }}
+        # ${{ github.event.inputs.job_id }}
+        # ${{ github.event.inputs.wf_id }}
+        curl -X GET "https://api.github.com/repos/nikhildave-96/java-selenium-cucumber-BDD/actions/jobs/40783882806/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.txt
         pwd
         ls
         
-  
