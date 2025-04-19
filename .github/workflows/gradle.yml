@@ -98,7 +98,7 @@ jobs:
 
 
   # Job 2 - Sending artifacts over email
-  Send-email-fail:
+  Send_email_fail:
     runs-on: macos-latest
     needs: Gradle_test
     # indicating 'run_tests_*' step failure implying 'Gradle_test' job failure.
@@ -149,7 +149,7 @@ jobs:
 
           
   # Job 3 - Sending pass info over email
-  Send-email-pass:
+  Send_email_pass:
     runs-on: macos-latest
     needs: Gradle_test
     if: ${{ needs.Gradle_test.result == 'success' &&  always() }}
@@ -178,7 +178,12 @@ jobs:
 
   download_logs:
     runs-on: macos-latest
-    if: always()
+    needs: [Gradle_test, Send_email_fail, Send_email_pass]
+    if: |
+      always()
+      # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped') && 
+      # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped')
+      
     steps: 
       - run: |
           pwd
