@@ -175,39 +175,26 @@ jobs:
             Thanks & Regards!
 
 
-
-  download_logs:
-    runs-on: ubuntu-latest
-    needs: [Gradle_test, Send_email_fail, Send_email_pass]
-    if: always()
-      # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped') && 
-      # (needs.Send_email_fail.result == 'success' || needs.Send_email_pass.result == 'skipped')
-      
-    steps: 
-      - run: |
-          pwd
-          ls
-          curl -X GET "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.zip
-          pwd
-          ls
-          # mkdir test456
-          # pwd
-          # ls
-          # # sudo apt-get install unzip
-          # sudo apt install unzip
-          # # sudo yum install unzip
-          # unzip test456.zip -d /test456
-          # pwd
-          # ls
-          # cd test456
-          # pwd
-          # ls
-          # cd ..
-          
-      - uses: actions/upload-artifact@v4
-        with:
-          name: upload-run-logs
-          path: |
-            test456.zip
-            # test456/*.txt
-        
+  # valid but downloaded zip if invalid as workflow run is already in progress.
+  # download_logs:
+  #   runs-on: ubuntu-latest
+  #   needs: [Gradle_test, Send_email_fail, Send_email_pass]
+  #   if: always()
+  #   steps: 
+  #     - run: |
+  #         curl -X GET "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.zip
+  #         mkdir test456_ext
+  #         # sudo apt-get install unzip
+  #         # sudo apt install unzip
+  #         # sudo yum install unzip
+  #         unzip test456.zip -d /test456_ext
+  #         cd test456_ext
+  #         pwd
+  #         ls
+  #         cd ..
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: upload-run-logs
+  #         path: |
+  #           test456.zip
+  #           # test456_ext/*.txt
