@@ -190,22 +190,24 @@ jobs:
           curl -X GET "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs" --header "Accept: application/vnd.github+json" --header "Authorization: Bearer ${{ secrets.MY_TOKEN }}" -L -o test456.zip
           pwd
           ls
-          mkdir test456
-          ls
-          # sudo apt-get install unzip
-          sudo apt install unzip
-          # sudo yum install unzip
-          unzip test456.zip -d /test456
-          pwd
-          ls
-          cd test456
-          pwd
-          ls
-          cd ..
+          # mkdir test456
+          # pwd
+          # ls
+          # # sudo apt-get install unzip
+          # sudo apt install unzip
+          # # sudo yum install unzip
+          # unzip test456.zip -d /test456
+          # pwd
+          # ls
+          # cd test456
+          # pwd
+          # ls
+          # cd ..
+          
       - uses: actions/upload-artifact@v4
         with:
           name: upload-run-logs
           path: |
             test456.zip
-            test456/*.txt
+            # test456/*.txt
         
